@@ -6,42 +6,32 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Core.DataAccess.EntityFramework;
+using Entities.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car,CarInfoContext> , ICarDal
     {
-        public void Add(Car entity)
+        public List<CarDetailsDto> GetCarDetails()
         {
-            using (Car_InfoContext context = new Car_InfoContext())
+            using (CarInfoContext context = new CarInfoContext())
             {
-                context.Add(entity);
+                var result = from car in context.Cars
+                    join color in context.Colors
+                        on car.ColorId equals color.Id
+                    join brand in context.Brands
+                        on car.BrandId equals brand.Id
+                    select new CarDetailsDto
+                    {
+                        CarId = car.Id,
+                        BrandName = brand.BrandName,
+                        ColorName = color.ColorName,
+                        DailyPrice = car.DailyPrice
+                    };
+                    return result.ToList();
             }
-        }
-
-        public void Delete(Car entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Car Get(Expression<Func<Car, bool>> filter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
-        {
-            using (Car_InfoContext context = new Car_InfoContext())
-            {
-                return filter == null
-                    ? context.Set<Car>().ToList()
-                    : context.Set<Car>().Where(filter).ToList();
-            }
-        }
-
-        public void Update(Car entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }
