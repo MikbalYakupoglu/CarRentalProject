@@ -6,73 +6,72 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.Constants;
+using Core.Results;
 
 namespace Business.Concrete
 {
     public class BrandManager : IBrandService
     {
-        IBrandDal _brandDal;
+        private readonly IBrandDal _brandDal;
 
         public BrandManager(IBrandDal brandDal)
         {
             _brandDal = brandDal;
         }
 
-        public void Add(Brand brand)
+        public IResult Add(Brand brand)
         {
             try
             {
-                var brandsInDB = _brandDal.GetAll().Where(b => b.BrandName == brand.BrandName).ToList();
+                var brandsInDb = _brandDal.GetAll().Where(b => b.BrandName == brand.BrandName).ToList();
 
-                if (brandsInDB.Count > 0)
+                if (brandsInDb.Count > 0)
                 {
                     throw new Exception();
                 }
                 else if (brand.BrandName.Length < 2)
                 {
-                    Console.WriteLine("Geçersiz Marka İsmi (Min 2 harf olmalı)");
+                    return new ErrorDataResult<Brand>(Messages.ItemNameInValid);
                 }
                 else
                 {
                     _brandDal.Add(brand);
-                    Console.WriteLine("{0} - {1} Successful Added.", brand.Id, brand.BrandName);
+                    return new SuccessDataResult<Brand>(Messages.SuccessAdded);
                 }
 
             }
             catch (Exception)
             {
-                Console.WriteLine("Eleman Zaten Bulunuyor.");
+                return new ErrorDataResult<Brand>(Messages.ItemExist);
             }
         }
 
-        public void Delete(Brand brand)
+        public IResult Delete(Brand brand)
         {
-            try
-            {
-                var brandsToDelete = _brandDal.GetAll().Where(b => b.BrandName == brand.BrandName).ToList();
+            var brandsToDelete = _brandDal.GetAll().Where(b => b.BrandName == brand.BrandName).ToList();
 
                 if (brandsToDelete.Count == 0)
                 {
-                    throw new InvalidOperationException();
+                    return new ErrorDataResult<Brand>(Messages.DataNotFound);
                 }
 
                 foreach (var brands in brandsToDelete)
-                {
-                        _brandDal.Delete(brands);
-                        Console.WriteLine("{0} - {1} Successful Deleted.", brand.Id, brand.BrandName);
-                }
-
-            }
-            catch (InvalidOperationException)
-            {
-                Console.WriteLine("Eleman Bulunamadı");
-            }
-
+                    _brandDal.Delete(brands);
+                
+                return new SuccessDataResult<Brand>(Messages.SuccessDeleted);
         }
 
-        public List<Brand> GetAll()
+        public IDataResult<List<Brand>> GetAll()
         {
-            return _brandDal.GetAll();
+            if (DateTime.Now.Hour == 19)
+            {
+                return new ErrorDataResult<List<Brand>>(Messages.MaintenanceTime);
+            }
+            else
+            {
+                return new SuccessDataResult<List<Brand>>(Messages.ItemsListed);
+            }
         }
 
     }

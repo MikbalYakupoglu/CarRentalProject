@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.Constants;
+using Core.Results;
 using Entities.DTOs;
 
 namespace Business.Concrete
@@ -19,37 +21,37 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
             if (car.Description.Length > 2 && car.DailyPrice > 0)
             {
                 _carDal.Add(car);
-                Console.WriteLine("{0} - {1} --> {2}$ successfull added.",car.Id,car.DailyPrice,car.Description);
+                return new SuccessResult(Messages.SuccessAdded);
             }
             else
             {
-                Console.WriteLine("Add Command Failed.");
+                return new ErrorResult(Messages.ItemNameInValid);
             }
         }
 
-        public List<CarDetailsDto> GetCarDetails()
+        public IDataResult<List<CarDetailsDto>> GetCarDetails()
         {
-            return _carDal.GetCarDetails();
+            return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails(),true,Messages.ItemsListed);
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-            return _carDal.GetAll();
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(),true,Messages.ItemsListed);
         }
 
-        public List<Car> GetCarsByBrandId(int id)
+        public IDataResult<List<Car>> GetCarsByBrandId(int id)
         {
-            return _carDal.GetAll(c=> c.BrandId== id);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c=> c.BrandId== id),true,Messages.ItemsListed);
         }
 
-        public List<Car> GetCarsByColorId(int id)
+        public IDataResult<List<Car>> GetCarsByColorId(int id)
         {
-            return _carDal.GetAll(c=> c.ColorId == id);
+            return new DataResult<List<Car>>(_carDal.GetAll(c=> c.ColorId == id),true,Messages.ItemsListed);
         }
     }
 }
