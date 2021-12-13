@@ -7,18 +7,29 @@ using Entities.Concrete;
 CarManager carManager = new CarManager(new EfCarDal());
 BrandManager brandManager = new BrandManager(new EfBrandDal());
 ColorManager colorManager = new ColorManager(new EfColorDal());
-
-
-;
+RentalManager rentalManager = new RentalManager(new EfRentalDal());
+UserManager userManager = new UserManager(new EfUserDal());
 
 //CarDetails(carManager);
-
 //ColorTest(colorManager);
 
-carManager.Add(new Car()
+rentalManager.Add(new Rental()
 {
-    DailyPrice = 0
+    CarId = 6,
+    CustomerId = 6,
+    RentDate = new DateTime(2021, 12, 12)
 });
+
+
+//carManager.Add(new Car()
+//{
+//    ColorId = 2,
+//    BrandId = 5,
+//    ModelYear = 2017,
+//    DailyPrice = 130,
+//    Description = ""
+
+//});
 
 
 
