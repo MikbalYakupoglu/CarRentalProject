@@ -64,13 +64,13 @@ namespace Business.Concrete
 
         public IDataResult<List<Brand>> GetAll()
         {
-            if (DateTime.Now.Hour == 19)
+            if (DateTime.Now.Hour == 22)
             {
                 return new ErrorDataResult<List<Brand>>(Messages.MaintenanceTime);
             }
             else
             {
-                return new SuccessDataResult<List<Brand>>(Messages.ItemsListed);
+                return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(),Messages.ItemsListed);
             }
         }
 

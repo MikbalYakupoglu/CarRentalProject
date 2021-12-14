@@ -45,7 +45,18 @@ namespace Business.Concrete
 
         public IResult Update(Rental rental)
         {
-            throw new NotImplementedException();
+            var result = _rentalDal.GetAll().FindLast(r => r.CarId == rental.CarId);
+
+            rental.RentalId = result.RentalId;
+
+            if (result.ReturnDate == null)
+            {
+                _rentalDal.Update(rental);
+                return new SuccessResult(Messages.SuccessUpdated);
+            }
+
+            return new ErrorResult(Messages.DataNotFound);
+
         }
 
         public IDataResult<List<Rental>> GetAll()

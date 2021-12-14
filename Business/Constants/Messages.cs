@@ -11,6 +11,7 @@ namespace Business.Constants
         public static string SuccessAdded = "Listeye Başarıyla Eklendi.";
         public static string ErrorAdd = "Veri Eklenemedi.";
         public static string SuccessDeleted = "Listeden Başarıyla Silindi.";
+        public static string SuccessUpdated = "Veri Başarıyla Güncellendi.";
         public static string ItemNameInValid = "Veri ismi en az 2 karakter olmalı.";
         public static string MaintenanceTime = "Sistem Bakımda. Lütfen sonra deneyiniz.";
         public static string ItemsListed = "Veriler Başarıyla Listelendi.";

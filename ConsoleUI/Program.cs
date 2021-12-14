@@ -13,12 +13,12 @@ UserManager userManager = new UserManager(new EfUserDal());
 //CarDetails(carManager);
 //ColorTest(colorManager);
 
-rentalManager.Add(new Rental()
-{
-    CarId = 6,
-    CustomerId = 6,
-    RentDate = new DateTime(2021, 12, 12)
-});
+//rentalManager.Add(new Rental()
+//{
+//    CarId = 6,
+//    CustomerId = 6,
+//    RentDate = new DateTime(2021, 12, 12)
+//});
 
 
 //carManager.Add(new Car()
@@ -31,6 +31,10 @@ rentalManager.Add(new Rental()
 
 //});
 
+//foreach (var item in brandManager.GetAll().Data)
+//{
+//    Console.WriteLine("{0} -> {1}",item.BrandId,item.BrandName);
+//}
 
 
 
