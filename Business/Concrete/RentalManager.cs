@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System.Runtime.InteropServices;
+using Business.Abstract;
 using Business.Constants;
 using Core.Results;
 using DataAccess.Abstract;
@@ -8,8 +9,8 @@ namespace Business.Concrete
 {
     public class RentalManager : IRentalService
     {
-        private IRentalDal _rentalDal;
-
+         private IRentalDal _rentalDal;
+        
         public RentalManager(IRentalDal rentalDal)
         {
             _rentalDal = rentalDal;
@@ -17,14 +18,18 @@ namespace Business.Concrete
 
         public IResult Add(Rental rental)
         {
+
             var result = _rentalDal.GetAll().FindLast(r => r.CarId == rental.CarId);
 
-                if (result.ReturnDate == null)
-                {
-                    return new ErrorResult(Messages.CarNotOnRent);
-                }
-
-                _rentalDal.Add(rental);
+            if (result == null)
+            {
+                return new ErrorResult(Messages.DataNotFound);
+            }
+            if (result.ReturnDate == null)
+            { 
+                return new ErrorResult(Messages.CarNotOnRent);
+            }
+            _rentalDal.Add(rental);
                 return new SuccessResult(Messages.SuccessAdded);
                 
         }
@@ -48,8 +53,7 @@ namespace Business.Concrete
             var result = _rentalDal.GetAll().FindLast(r => r.CarId == rental.CarId);
 
             rental.RentalId = result.RentalId;
-
-            if (result.ReturnDate == null)
+            if (result.ReturnDate.Value.Year < 2000 || result.ReturnDate == null)
             {
                 _rentalDal.Update(rental);
                 return new SuccessResult(Messages.SuccessUpdated);

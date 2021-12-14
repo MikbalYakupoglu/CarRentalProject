@@ -38,6 +38,7 @@ UserManager userManager = new UserManager(new EfUserDal());
 
 
 
+
 static void DoubleSpace()
 {
     Console.WriteLine();
