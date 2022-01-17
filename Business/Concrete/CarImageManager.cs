@@ -33,8 +33,9 @@ public class CarImageManager : ICarImageService
         {
             return result;
         }
+        var imagePathInApi = _fileHelperService.Upload(file);
         
-        carImage.ImagePath = _fileHelperService.Upload(file);
+        carImage.ImagePath = imagePathInApi;
         carImage.Date = DateTime.Now;
         _carImageDal.Add(carImage);
         
@@ -44,12 +45,20 @@ public class CarImageManager : ICarImageService
     
     public IResult Update(IFormFile file, CarImage carImage)
     {
-        throw new NotImplementedException();
+        throw new Exception();
     }
 
     public IResult Delete(CarImage carImage)
     {
-        throw new NotImplementedException();
+        var oldCarImage = _carImageDal.GetAll().FirstOrDefault(cI => cI.CarId == carImage.CarId);
+        if (oldCarImage == null)
+        {
+            return new ErrorResult(Messages.DataNotFound);
+        }
+        
+        _fileHelperService.Delete(oldCarImage.ImagePath);
+        _carImageDal.Delete(oldCarImage);
+        return new SuccessResult(Messages.SuccessDeleted);
     }
 
     public IDataResult<List<CarImage>> ListAllImages()

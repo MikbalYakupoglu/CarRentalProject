@@ -6,8 +6,8 @@ namespace Core.Utilities.Helpers.FileHelper;
 
 public class FileHelperManager : IFileHelperService
 {
-    private static string _currentDirectory = Environment.CurrentDirectory + "\\wwwroot";
-    private static string _folderName = "\\uploads\\";
+    private static string _currentDirectory = Environment.CurrentDirectory + @"\\wwwroot";
+    private static string _folderName = @"\\uploads\\";
     private static string _folderPath = _currentDirectory + _folderName;
     
     public string Upload(IFormFile file)
@@ -36,12 +36,17 @@ public class FileHelperManager : IFileHelperService
     
     public string Update(IFormFile file, string fileName)
     {
-        if (File.Exists(fileName))
+        if (file.Length > 0)
         {
-            File.Delete(fileName);
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+
+            return Upload(file);
         }
-        
-        return Upload(file);
+
+        return null;
     }
 
     public void Delete(string root)
@@ -51,5 +56,9 @@ public class FileHelperManager : IFileHelperService
             File.Delete(root);
         }
     }
-    
+
+    public void GetPath()
+    {
+        
+    }
 }

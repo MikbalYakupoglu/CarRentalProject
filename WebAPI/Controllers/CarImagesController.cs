@@ -48,7 +48,33 @@ namespace WebAPI.Controllers
         }
         
         
+        [HttpPost("Update")]
+        public IActionResult UpdateImage([FromForm] IFormFile file ,[FromForm] CarImage carImage)
+        {
+            return BadRequest();
+
+            
+            var result = _carImageService.Update(file,carImage);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+        }
         
+        [HttpPost("Delete")]
+        public IActionResult DeleteImage([FromForm] CarImage carImage)
+        {
+            var result = _carImageService.Delete(carImage);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
         
     }
 }
