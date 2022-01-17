@@ -76,5 +76,18 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         
+        [HttpGet("ListByCarId")]
+        public IActionResult ListByCarId(int id)
+        {
+            var result = _carImageService.ListImagesByCarId(id);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+        
     }
 }

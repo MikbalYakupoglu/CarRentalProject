@@ -12,6 +12,5 @@ public interface ICarImageService
 
     IDataResult<List<CarImage>> ListAllImages();
     IDataResult<List<CarImage>> ListImagesByCarId(int carId);
-    IDataResult<CarImage> ListImageByImageId(int imageId);
-    
+
 }

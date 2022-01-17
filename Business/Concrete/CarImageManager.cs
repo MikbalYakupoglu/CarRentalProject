@@ -45,7 +45,7 @@ public class CarImageManager : ICarImageService
     
     public IResult Update(IFormFile file, CarImage carImage)
     {
-        throw new Exception();
+        throw new NullReferenceException();
     }
 
     public IResult Delete(CarImage carImage)
@@ -68,12 +68,7 @@ public class CarImageManager : ICarImageService
 
     public IDataResult<List<CarImage>> ListImagesByCarId(int carId)
     {
-        throw new NotImplementedException();
-    }
-
-    public IDataResult<CarImage> ListImageByImageId(int imageId)
-    {
-        throw new NotImplementedException();
+        return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll().Where(c=> c.CarId== carId).ToList(),Messages.ItemsListed);
     }
 
 
