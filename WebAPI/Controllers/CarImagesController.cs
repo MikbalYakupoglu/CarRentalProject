@@ -51,8 +51,6 @@ namespace WebAPI.Controllers
         [HttpPost("Update")]
         public IActionResult UpdateImage([FromForm] IFormFile file ,[FromForm] CarImage carImage)
         {
-            return BadRequest();
-
             
             var result = _carImageService.Update(file,carImage);
 
@@ -60,7 +58,7 @@ namespace WebAPI.Controllers
             {
                 return Ok(result);
             }
-
+            return BadRequest();
         }
         
         [HttpPost("Delete")]

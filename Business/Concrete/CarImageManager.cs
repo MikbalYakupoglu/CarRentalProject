@@ -45,7 +45,21 @@ public class CarImageManager : ICarImageService
     
     public IResult Update(IFormFile file, CarImage carImage)
     {
-        throw new NullReferenceException();
+        var result = BusinessRules.Run(
+            CheckIfImageCountExceed(carImage.CarId)
+        );
+
+        if (result != null)
+        {
+            return result;
+        }
+
+        var oldImagePath = _carImageDal.GetAll().FirstOrDefault(cI => cI.CarId == carImage.CarId);
+        var newImagePath = _fileHelperService.Update(file, oldImagePath.ImagePath);
+        oldImagePath.ImagePath = newImagePath;
+        _carImageDal.Update(oldImagePath);
+
+        return new SuccessResult(Messages.SuccessUpdated);
     }
 
     public IResult Delete(CarImage carImage)

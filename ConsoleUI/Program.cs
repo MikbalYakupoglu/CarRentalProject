@@ -1,5 +1,6 @@
 ﻿using Business.Concrete;
 using Business.Constants;
+using Core.Utilities.Helpers.FileHelper;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 
@@ -9,7 +10,6 @@ BrandManager brandManager = new BrandManager(new EfBrandDal());
 ColorManager colorManager = new ColorManager(new EfColorDal());
 RentalManager rentalManager = new RentalManager(new EfRentalDal());
 UserManager userManager = new UserManager(new EfUserDal());
-
 
 //CarDetails(carManager);
 //ColorTest(colorManager);
