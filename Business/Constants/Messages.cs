@@ -18,5 +18,7 @@ namespace Business.Constants
         public static string ItemExist = "Eklemek İstediğiniz Veri Zaten Bulunuyor.";
         public static string DataNotFound = "Veri Bulunamadı.";
         public static string CarNotOnRent = "Araç Şu Anda Kiralanamıyor. Lütfen Başka Araç Deneyiniz.";
+        public static string CarImageCountExceed = "Arabanın Azami Resim Sayısı Aşıldı. 1 Arabanın En Fazla 5 Resmi Olabilir.";
+        public static string ImageAdded = "Resim Başarıyla Yüklendi.";
     }
 }

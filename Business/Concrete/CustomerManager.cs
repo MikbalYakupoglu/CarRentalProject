@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business.Abstract;
+using Business.Constants;
 using Core.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -21,7 +22,21 @@ namespace Business.Concrete
 
         public IResult Add(Customer customer)
         {
-            throw new NotImplementedException();
+            var companyName = _customerDal.GetAll().Any(c => c.CompanyName == customer.CompanyName);
+            var userId = _customerDal.GetAll().Any(c => c.UserId == customer.UserId);
+
+            if (companyName && userId)
+            {
+                return new ErrorResult(Messages.ItemExist);
+            }
+
+            if (customer.CompanyName.Length < 2)
+            {
+                return new ErrorResult(Messages.ItemNameInValid);
+            }
+
+            _customerDal.Add(customer);
+            return new SuccessResult(Messages.SuccessAdded);
         }
 
         public IResult Delete(Customer customer)

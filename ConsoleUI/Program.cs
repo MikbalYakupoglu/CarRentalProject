@@ -10,6 +10,7 @@ ColorManager colorManager = new ColorManager(new EfColorDal());
 RentalManager rentalManager = new RentalManager(new EfRentalDal());
 UserManager userManager = new UserManager(new EfUserDal());
 
+
 //CarDetails(carManager);
 //ColorTest(colorManager);
 
