@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Business.Constants;
 using Core.Results;
+using Core.Utilities.Business;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concrete
@@ -41,17 +42,51 @@ namespace Business.Concrete
 
         public IResult Delete(Color color)
         {
-            var colorsToDelete = _colorDal.GetAll().Where(c => c.ColorName == color.ColorName).ToList();
+            var result = BusinessRules.Run(
+                CheckIfColorExist(color.ColorName)
+            );
 
-            if (colorsToDelete.Count == 0)
+            if (!result.Success)
             {
-                return new ErrorDataResult<Brand>(Messages.DataNotFound);
+                return result;
             }
-
+            
+            var colorsToDelete = _colorDal.GetAll().Where(c => c.ColorName == color.ColorName).ToList();
+            
             foreach (var colors in colorsToDelete)
                 _colorDal.Delete(colors);
 
             return new SuccessDataResult<Brand>(Messages.SuccessDeleted);
+        }
+
+        public IResult Update(Color color)
+        {
+            var result = BusinessRules.Run(
+                CheckIfColorExist(color.ColorName)
+            );
+
+            if (!result.Success)
+            {
+                return result;
+            }
+            
+            var colorToUpdate = _colorDal.GetAll().FirstOrDefault(c => c.ColorName == color.ColorName);
+
+            colorToUpdate.ColorName = color.ColorName;
+            _colorDal.Update(colorToUpdate);
+
+            return new SuccessResult(Messages.SuccessUpdated);
+        }
+
+        private IResult CheckIfColorExist(string colorName)
+        {
+            var result = _colorDal.GetAll().Where(c => c.ColorName == colorName).ToList();
+            if (result.Count == 0)
+            {
+                return new ErrorResult(Messages.DataNotFound);
+            }
+
+            return new SuccessResult();
         }
     }
 }
