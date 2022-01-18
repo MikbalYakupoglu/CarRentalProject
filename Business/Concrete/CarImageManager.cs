@@ -26,7 +26,7 @@ public class CarImageManager : ICarImageService
     {
 
         var result = BusinessRules.Run(
-            CheckIfImageCountExceed(carImage.CarId)
+            CheckIfImageLimitExceed(carImage.CarId)
             );
 
         if (result != null)
@@ -46,7 +46,7 @@ public class CarImageManager : ICarImageService
     public IResult Update(IFormFile file, CarImage carImage)
     {
         var result = BusinessRules.Run(
-            CheckIfImageCountExceed(carImage.CarId)
+            CheckIfImageLimitExceed(carImage.CarId)
         );
 
         if (result != null)
@@ -82,14 +82,19 @@ public class CarImageManager : ICarImageService
 
     public IDataResult<List<CarImage>> ListImagesByCarId(int carId)
     {
+        var result = BusinessRules.Run(CheckCarImage(carId));
+
+        if (!result.Success)
+        {
+            return new SuccessDataResult<List<CarImage>>(GetDefaultImage(carId).Data);
+        }
         return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll().Where(c=> c.CarId== carId).ToList(),Messages.ItemsListed);
     }
 
 
 
 
-
-    private IResult CheckIfImageCountExceed(int carId)
+    private IResult CheckIfImageLimitExceed(int carId)
     {
         var result = _carImageDal.GetAll().Where(cI => cI.CarId == carId).Count();
 
@@ -99,5 +104,24 @@ public class CarImageManager : ICarImageService
         }
 
         return new SuccessResult();
+    }
+    
+    private IResult CheckCarImage(int carId)
+    {
+        var result = _carImageDal.GetAll().Count(c => c.CarId == carId);
+
+        if (result  == 0)
+        {
+            return new ErrorResult();
+        }
+        return new SuccessResult();
+    }
+    
+    private IDataResult<List<CarImage>> GetDefaultImage(int carId)
+    {
+           
+        List<CarImage> carImage = new List<CarImage>();
+        carImage.Add(new CarImage { CarId = carId, Date = DateTime.Now, ImagePath = "DefaultImage.png" });
+        return new SuccessDataResult<List<CarImage>>(carImage);
     }
 }
