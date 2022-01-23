@@ -11,7 +11,7 @@ using Core.DataAccess.EntityFramework;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfBrandDal : EfEntityRepositoryBase<Brand,CarInfoContext> , IBrandDal
+    public class EfBrandDal : EfEntityRepositoryBase<Brand,CarRentalContext> , IBrandDal
     {
 
     }

@@ -10,7 +10,7 @@ using FluentValidation;
 
 namespace Core.Aspects.Autofac.Validation
 {
-    public class ValidationAspect : MethodInterception
+    public class ValidationAspect : MethodInterceptions
     {
         private readonly Type _validatorType;
         public ValidationAspect(Type validatorType)

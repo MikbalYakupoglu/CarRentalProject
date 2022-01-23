@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Utilities.Business;
 using Core.Utilities.Helpers.FileHelper;
 using Core.Results;
@@ -21,7 +24,9 @@ public class CarImageManager : ICarImageService
         _fileHelperService = fileHelperService;
     }
 
-    
+    [SecuredOperations("admin")]
+    [TransactionScopeAspect]
+    [CacheRemoveAspect("ICarImageService.Get")]
     public IResult Add(IFormFile file, CarImage carImage)
     {
 
@@ -41,8 +46,9 @@ public class CarImageManager : ICarImageService
         
         return new SuccessResult(Messages.ImageAdded);
     }
-
-    
+    [SecuredOperations("admin")]
+    [TransactionScopeAspect]
+    [CacheRemoveAspect("ICarImageService.Get")]
     public IResult Update(IFormFile file, CarImage carImage)
     {
         var result = BusinessRules.Run(
@@ -82,12 +88,16 @@ public class CarImageManager : ICarImageService
 
     public IDataResult<List<CarImage>> ListImagesByCarId(int carId)
     {
-        var result = BusinessRules.Run(CheckCarImage(carId));
+        var result = BusinessRules.Run(
+            CheckCarImage(carId)
+
+            );
 
         if (!result.Success)
         {
             return new SuccessDataResult<List<CarImage>>(GetDefaultImage(carId).Data);
         }
+
         return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll().Where(c=> c.CarId== carId).ToList(),Messages.ItemsListed);
     }
 

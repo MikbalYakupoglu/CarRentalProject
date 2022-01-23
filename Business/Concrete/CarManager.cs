@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
 using Core.Results;
 using Core.Utilities.Business;
 using Entities.DTOs;
@@ -22,6 +24,7 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
         { 
             if (car.Description.Length > 2 && car.DailyPrice > 0)
@@ -33,6 +36,7 @@ namespace Business.Concrete
             
         }
 
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
         {
             // Null Exception
@@ -58,26 +62,32 @@ namespace Business.Concrete
             return new SuccessResult(Messages.SuccessUpdated);
         }
 
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(Car car)
         {
             throw new NotImplementedException();
         }
 
+        [CacheAspect(30)]
         public IDataResult<List<CarDetailsDto>> GetCarDetails()
         {
             return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails(),Messages.ItemsListed);
         }
-
+        
+        [SecuredOperations("admin")]
+        [CacheAspect(30)]
         public IDataResult<List<Car>> GetAll()
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(),Messages.ItemsListed);
         }
 
+        [CacheAspect(10)]
         public IDataResult<List<Car>> GetCarsByBrandId(int id)
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(c=> c.BrandId== id),Messages.ItemsListed);
         }
 
+        [CacheAspect(10)]
         public IDataResult<List<Car>> GetCarsByColorId(int id)
         {
             return new DataResult<List<Car>>(_carDal.GetAll(c=> c.ColorId == id),true,Messages.ItemsListed);

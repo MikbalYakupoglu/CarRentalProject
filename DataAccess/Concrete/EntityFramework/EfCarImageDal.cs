@@ -4,7 +4,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework;
 
-public class EfCarImageDal : EfEntityRepositoryBase<CarImage,CarInfoContext> , ICarImageDal
+public class EfCarImageDal : EfEntityRepositoryBase<CarImage,CarRentalContext> , ICarImageDal
 {
     
 }

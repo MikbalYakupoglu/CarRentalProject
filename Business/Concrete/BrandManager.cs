@@ -7,8 +7,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.Results;
 
@@ -23,7 +26,10 @@ namespace Business.Concrete
             _brandDal = brandDal;
         }
 
+        [SecuredOperations("admin")]
         [ValidationAspect(typeof(BrandValidation))]
+        [CacheRemoveAspect("IBrandService.Get")]
+        [TransactionScopeAspect]
         public IResult Add(Brand brand)
         {
             try
@@ -46,6 +52,9 @@ namespace Business.Concrete
             }
         }
 
+        [CacheRemoveAspect("IBrandService.Get")]
+        [SecuredOperations("admin")]
+        [TransactionScopeAspect]
         public IResult Delete(Brand brand)
         {
             var brandsToDelete = _brandDal.GetAll().Where(b => b.BrandName == brand.BrandName).ToList();
@@ -61,6 +70,7 @@ namespace Business.Concrete
                 return new SuccessDataResult<Brand>(Messages.SuccessDeleted);
         }
 
+        [CacheAspect(20)]
         public IDataResult<List<Brand>> GetAll()
         {
             if (DateTime.Now.Hour == 22)
