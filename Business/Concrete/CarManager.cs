@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Results;
 using Core.Utilities.Business;
 using Entities.DTOs;
@@ -24,6 +25,8 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        [SecuredOperations("admin")]
+        [TransactionScopeAspect]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
         { 
@@ -36,6 +39,8 @@ namespace Business.Concrete
             
         }
 
+        [SecuredOperations("admin")]
+        [TransactionScopeAspect]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
         {
@@ -62,6 +67,8 @@ namespace Business.Concrete
             return new SuccessResult(Messages.SuccessUpdated);
         }
 
+        [SecuredOperations("admin")]
+        [TransactionScopeAspect]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(Car car)
         {

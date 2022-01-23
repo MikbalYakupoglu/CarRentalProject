@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Results;
 using Core.Utilities.Business;
 using Microsoft.EntityFrameworkCore;
@@ -22,11 +25,10 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
-        public IDataResult<List<Color>> GetAll()
-        {
-            return new DataResult<List<Color>>(_colorDal.GetAll(),true,Messages.ItemsListed);
-        }
 
+        [SecuredOperations("admin")]
+        [TransactionScopeAspect]
+        [CacheRemoveAspect("IColorService.Get")]
         public IResult Add(Color color)
         {
             if (_colorDal.GetAll().Any(c=> c.ColorName == color.ColorName))
@@ -40,6 +42,9 @@ namespace Business.Concrete
             }
         }
 
+        [SecuredOperations("admin")]
+        [TransactionScopeAspect]
+        [CacheRemoveAspect("IColorService.Get")]
         public IResult Delete(Color color)
         {
             var result = BusinessRules.Run(
@@ -59,6 +64,9 @@ namespace Business.Concrete
             return new SuccessDataResult<Brand>(Messages.SuccessDeleted);
         }
 
+        [SecuredOperations("admin")]
+        [TransactionScopeAspect]
+        [CacheRemoveAspect("IColorService.Get")]
         public IResult Update(Color color)
         {
             var result = BusinessRules.Run(
@@ -76,6 +84,12 @@ namespace Business.Concrete
             _colorDal.Update(colorToUpdate);
 
             return new SuccessResult(Messages.SuccessUpdated);
+        }
+
+
+        public IDataResult<List<Color>> GetAll()
+        {
+            return new DataResult<List<Color>>(_colorDal.GetAll(), true, Messages.ItemsListed);
         }
 
         private IResult CheckIfColorExist(string colorName)

@@ -10,7 +10,7 @@ public interface ICarImageService
     IResult Update(IFormFile file, CarImage carImage);
     IResult Delete(CarImage carImage);
 
-    IDataResult<List<CarImage>> ListAllImages();
-    IDataResult<List<CarImage>> ListImagesByCarId(int carId);
+    IDataResult<List<CarImage>> GetAllImages();
+    IDataResult<List<CarImage>> GetImagesByCarId(int carId);
 
 }
