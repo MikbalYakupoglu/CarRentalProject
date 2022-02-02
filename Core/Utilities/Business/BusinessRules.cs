@@ -13,6 +13,6 @@ public static class BusinessRules
                 return rule;
             }
         }
-        return null;
+        return new SuccessResult();
     }
 }

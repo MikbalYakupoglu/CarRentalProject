@@ -72,7 +72,8 @@ namespace Business.Concrete
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(Car car)
         {
-            throw new NotImplementedException();
+            _carDal.Delete(car);
+            return new SuccessResult(Messages.SuccessDeleted);
         }
 
         [CacheAspect(30)]
@@ -81,7 +82,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails(),Messages.ItemsListed);
         }
         
-        [SecuredOperations("admin")]
+        //[SecuredOperations("admin")]
         [CacheAspect(30)]
         public IDataResult<List<Car>> GetAll()
         {

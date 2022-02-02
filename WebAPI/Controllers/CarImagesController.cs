@@ -20,10 +20,10 @@ namespace WebAPI.Controllers
             _carImageService = carImageService;
         }
 
-        [HttpGet("ListAll")]
-        public IActionResult ListAll()
+        [HttpGet("GetAll")]
+        public IActionResult ListAllImages()
         {
-            var result = _carImageService.ListAllImages();
+            var result = _carImageService.GetAllImages();
 
             if (result.Success)
             {
@@ -77,7 +77,7 @@ namespace WebAPI.Controllers
         [HttpGet("ListByCarId")]
         public IActionResult ListByCarId(int id)
         {
-            var result = _carImageService.ListImagesByCarId(id);
+            var result = _carImageService.GetImagesByCarId(id);
 
             if (result.Success)
             {
