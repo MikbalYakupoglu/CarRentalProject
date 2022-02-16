@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities.Concrete;
-using Core.Results;
+using Core.Utilities.Results;
 using Entities.Concrete;
 using User = Core.Entities.Concrete.User;
 

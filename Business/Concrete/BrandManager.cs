@@ -13,7 +13,7 @@ using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
-using Core.Results;
+using Core.Utilities.Results;
 
 namespace Business.Concrete
 {
@@ -73,14 +73,7 @@ namespace Business.Concrete
         [CacheAspect(20)]
         public IDataResult<List<Brand>> GetAll()
         {
-            if (DateTime.Now.Hour == 22)
-            {
-                return new ErrorDataResult<List<Brand>>(Messages.MaintenanceTime);
-            }
-            else
-            {
-                return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(),Messages.ItemsListed);
-            }
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(),Messages.ItemsListed);
         }
 
     }

@@ -10,9 +10,9 @@ using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
-using Core.Results;
 using Core.Utilities.Business;
 using Entities.DTOs;
+using Core.Utilities.Results;
 
 namespace Business.Concrete
 {
@@ -24,6 +24,7 @@ namespace Business.Concrete
         {
             _carDal = carDal;
         }
+
 
         [SecuredOperations("admin")]
         [TransactionScopeAspect]
@@ -81,8 +82,27 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails(),Messages.ItemsListed);
         }
-        
-        //[SecuredOperations("admin")]
+
+        [CacheAspect(10)]
+        public IDataResult<CarDetailsDto> GetCar(int carId)
+        {
+            var result = BusinessRules.Run(
+                CheckIfCarExist(carId)
+            );
+
+            if (!result.Success)
+            {
+                return new ErrorDataResult<CarDetailsDto>(result.Message);
+            }
+            return new SuccessDataResult<CarDetailsDto>(_carDal.GetCarDetails().Find(c=> c.CarId == carId), Messages.ItemsListed);
+        }
+
+
+        public IDataResult<List<CarDetailsDto>> GetCarsByFilter(int brandId, int colorId)
+        {
+            return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails().Where(c=> c.BrandId == brandId && c.ColorId == colorId).ToList());
+        }
+
         [CacheAspect(30)]
         public IDataResult<List<Car>> GetAll()
         {
@@ -90,17 +110,16 @@ namespace Business.Concrete
         }
 
         [CacheAspect(10)]
-        public IDataResult<List<Car>> GetCarsByBrandId(int id)
+        public IDataResult<List<CarDetailsDto>> GetCarsByBrandId(int id)
         {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c=> c.BrandId== id),Messages.ItemsListed);
+            return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails().FindAll(c=> c.BrandId == id),Messages.ItemsListed);
         }
 
         [CacheAspect(10)]
-        public IDataResult<List<Car>> GetCarsByColorId(int id)
+        public IDataResult<List<CarDetailsDto>> GetCarsByColorId(int id)
         {
-            return new DataResult<List<Car>>(_carDal.GetAll(c=> c.ColorId == id),true,Messages.ItemsListed);
+            return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails().FindAll(c => c.ColorId == id),Messages.ItemsListed);
         }
-
 
 
         private IResult CheckIfCarExist(int id)

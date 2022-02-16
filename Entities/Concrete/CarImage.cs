@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Core.Entities;
+using Core.Entities.Abstract;
 using Microsoft.AspNetCore.Http;
 
 namespace Entities.Concrete;

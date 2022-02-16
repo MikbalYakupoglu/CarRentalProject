@@ -10,9 +10,9 @@ using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
-using Core.Results;
 using Core.Utilities.Business;
 using Microsoft.EntityFrameworkCore;
+using Core.Utilities.Results;
 
 namespace Business.Concrete
 {

@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System.Diagnostics;
+using Business.Abstract;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -75,9 +76,9 @@ namespace WebAPI.Controllers
         }
         
         [HttpGet("ListByCarId")]
-        public IActionResult ListByCarId(int id)
+        public IActionResult ListByCarId(int carId)
         {
-            var result = _carImageService.GetImagesByCarId(id);
+            var result = _carImageService.GetImagesByCarId(carId);
 
             if (result.Success)
             {
@@ -86,6 +87,18 @@ namespace WebAPI.Controllers
 
             return BadRequest(result);
         }
-        
+
+        [HttpGet("GetImageForExhibit")]
+        public IActionResult GetImageForExhibit()
+        {
+            var result = _carImageService.GetImageForExhibit();
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
     }
 }

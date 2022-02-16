@@ -22,7 +22,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/cars",
+      "launchUrl": "api/cars/getall",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

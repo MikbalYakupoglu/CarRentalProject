@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : EfEntityRepositoryBase<Car,CarRentalContext> , ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, CarRentalContext>, ICarDal
     {
         public List<CarDetailsDto> GetCarDetails()
         {
@@ -23,16 +23,21 @@ namespace DataAccess.Concrete.EntityFramework
                         on car.ColorId equals color.ColorId
                     join brand in context.Brands
                         on car.BrandId equals brand.BrandId
+                    //join carImages in context.CarImages
+                    //    on car.CarId equals carImages.CarId
                     select new CarDetailsDto
                     {
                         CarId = car.CarId,
+                        //ImagePath = carImages.ImagePath,
+                        BrandId = brand.BrandId,
                         BrandName = brand.BrandName,
+                        ColorId = color.ColorId,
                         ColorName = color.ColorName,
                         ModelYear = car.ModelYear,
                         DailyPrice = car.DailyPrice,
                         Description = car.Description
                     };
-                    return result.ToList();
+                return result.ToList();
             }
         }
     }

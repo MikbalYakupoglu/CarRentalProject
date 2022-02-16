@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Business.Abstract;
 using Business.Constants;
-using Core.Results;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -67,6 +67,11 @@ namespace Business.Concrete
         public IDataResult<List<Rental>> GetAll()
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(), Messages.ItemsListed);
+        }
+
+        public IDataResult<RentalDetailsDto> GetRentalDetailByCarId(int carId)
+        {
+            return new SuccessDataResult<RentalDetailsDto>(_rentalDal.GetRentalDetails().Find(r => r.CarId ==  carId));
         }
 
         public IDataResult<List<RentalDetailsDto>> GetRentalDetails()

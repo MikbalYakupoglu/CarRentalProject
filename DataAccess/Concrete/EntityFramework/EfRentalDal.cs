@@ -18,13 +18,12 @@ namespace DataAccess.Concrete.EntityFramework
                         on customer.UserId equals user.UserId
                     join car in context.Cars
                         on rental.CarId equals car.CarId
-                    join brand in context.Brands
-                        on car.BrandId equals brand.BrandId
                     select new RentalDetailsDto()
                     {
                         RentalId = rental.RentalId,
+                        CarId = car.CarId,
                         CustomerName = $"{user.FirstName} {user.LastName}",
-                        BrandName = brand.BrandName,
+                        CarDescription = car.Description,
                         RentDate = rental.RentDate,
                         ReturnDate = rental.ReturnDate
                     };

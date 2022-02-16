@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Core.Utilities.Results;
+using Microsoft.AspNetCore.Http;
 
 
 namespace Core.Utilities.Helpers.FileHelper;
 
 public interface IFileHelperService 
 {
-    string Upload(IFormFile file);
-    string Update(IFormFile file, string filePath);
-    void Delete(string root);
+    IResult Upload(IFormFile file);
+    IResult Update(IFormFile file,string sourcePath);
+    IResult Delete(string root);
 }
