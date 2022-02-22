@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities.Concrete;
+using System.Data.SqlClient;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -14,6 +15,7 @@ namespace DataAccess.Concrete.EntityFramework
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=DESKTOP-L28BKI5;Database=CarRental;Trusted_Connection=True;");
+            
         }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Car> Cars { get; set; }

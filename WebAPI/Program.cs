@@ -6,8 +6,10 @@ using Core.Extensions;
 using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -23,6 +25,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 
 builder.Services.AddCors();
 
+//builder.Services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
+
 var tokenOptions = configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -36,7 +40,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidAudience = tokenOptions.Audience,
             ValidIssuer = tokenOptions.Issuer,
-            IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
+            IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(builder.Configuration["TokenOptions:SecurityKey"])
         };
 
     });
@@ -50,6 +54,8 @@ builder.Services.AddDependencyResolvers(new ICoreModule[]
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//StripeConfiguration.ApiKey = (configuration.GetSection("Stripe")["SecretKey"]);
 
 var app = builder.Build();
 
