@@ -13,6 +13,7 @@ using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 
 namespace Business.Concrete
@@ -32,24 +33,18 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IResult Add(Brand brand)
         {
-            try
+            var result = BusinessRules.Run(
+                CheckIfBrandAlreadyExistInDb(brand.BrandName)
+                );
+
+            if (!result.Success)
             {
-                var brandsInDb = _brandDal.GetAll().Where(b => b.BrandName.ToUpper(new CultureInfo("tr-TR")) 
-                                                               == brand.BrandName.ToUpper(new CultureInfo("tr-TR"))).ToList();
-
-                if (brandsInDb.Count > 0)
-                {
-                    throw new Exception();
-                }
-
-                _brandDal.Add(brand);
-                return new SuccessDataResult<Brand>(Messages.SuccessAdded);
+                return new ErrorResult(result.Message); 
             }
 
-            catch (Exception)
-            {
-                return new ErrorDataResult<Brand>(Messages.ItemExist);
-            }
+            _brandDal.Add(brand);
+            return new SuccessResult(Messages.SuccessAdded);
+
         }
 
         [CacheRemoveAspect("IBrandService.Get")]
@@ -57,23 +52,51 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IResult Delete(Brand brand)
         {
-            var brandsToDelete = _brandDal.GetAll().Where(b => b.BrandName == brand.BrandName).ToList();
+            var result = BusinessRules.Run(
+                CheckIfBrandExistForDelete(brand.BrandName)
+                );
 
-                if (brandsToDelete.Count == 0)
-                {
-                    return new ErrorDataResult<Brand>(Messages.DataNotFound);
-                }
+            if(!result.Success)
+            {
+                return new ErrorResult(result.Message);
+            }
 
-                foreach (var brands in brandsToDelete)
-                    _brandDal.Delete(brands);
-                
-                return new SuccessDataResult<Brand>(Messages.SuccessDeleted);
+            
+            _brandDal.Delete(brand);
+            return new SuccessResult(Messages.SuccessDeleted);
         }
 
         [CacheAspect(20)]
         public IDataResult<List<Brand>> GetAll()
         {
             return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(),Messages.ItemsListed);
+        }
+
+
+        private IResult CheckIfBrandAlreadyExistInDb(string brandName)
+        {
+            var brandsInDb = _brandDal.GetAll().Where(b => b.BrandName.ToUpper(new CultureInfo("tr-TR"))
+                                                           == brandName.ToUpper(new CultureInfo("tr-TR"))).ToList();
+
+            if (brandsInDb.Count > 0)
+            {
+                return new ErrorResult(Messages.ItemExist);
+            }
+
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfBrandExistForDelete(string brandName)
+        {
+            var brandsInDb = _brandDal.GetAll().Where(b => b.BrandName.ToUpper(new CultureInfo("tr-TR"))
+                                                           == brandName.ToUpper(new CultureInfo("tr-TR"))).ToList();
+
+            if (brandsInDb.Count <= 0)
+            {
+                return new ErrorResult(Messages.DataNotFound);
+            }
+
+            return new SuccessResult();
         }
 
     }

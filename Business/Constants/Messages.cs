@@ -23,7 +23,6 @@ namespace Business.Constants
         public static string ImageAdded = "Resim Başarıyla Yüklendi.";
         public static string UserAlreadyExist = "Bu Kullanıcı Zaten Mevcut.";
         public static string UserNotFound = "Kullanıcı Bulunamadı.";
-        public static string AuthorizationDenied = "Yetkiniz Bulunmuyor.";
         public static string PasswordError = "Geçersiz Şifre.";
         public static string SuccessfulLogin = "Giriş Başarılı.";
         public static string SuccessfulRegister = "Kayıt Başarılı.";
