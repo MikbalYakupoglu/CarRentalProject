@@ -3,13 +3,16 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Entities.DTOs;
 using Core.Utilities.Results;
@@ -26,18 +29,25 @@ namespace Business.Concrete
         }
 
 
-        [SecuredOperations("admin")]
+        //[SecuredOperations("admin")]
+        [ValidationAspect(typeof(CarValidations))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
-        { 
-            if (car.Description.Length > 2 && car.DailyPrice > 0)
+        {
+            var result = BusinessRules.Run(
+                CheckIfCarAlreadyExistInDb(car)
+            );
+
+            if (!result.Success)
             {
-                _carDal.Add(car);
-                return new SuccessResult(Messages.SuccessAdded);
+                return new ErrorResult(result.Message);
             }
-            return new ErrorResult(Messages.ItemNameInValid);
-            
+
+
+            _carDal.Add(car);
+            return new SuccessResult(Messages.SuccessAdded);
+
         }
 
         [SecuredOperations("admin")]
@@ -129,6 +139,22 @@ namespace Business.Concrete
             if (result.Count == 0)
             {
                 return new ErrorResult(Messages.DataNotFound);
+            }
+
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfCarAlreadyExistInDb(Car car)
+        {
+            var result = _carDal.GetAll().Where(c => c.ColorId == car.CarId && 
+                                                     c.BrandId == car.BrandId &&
+                                                     c.ModelYear == car.ModelYear &&
+                                                     c.DailyPrice == car.DailyPrice && 
+                                                     c.Description.ToLower(new CultureInfo("tr-TR")) == car.Description.ToLower(new CultureInfo("tr-TR")));
+
+            if (result != null)
+            {
+                return new ErrorResult(Messages.ItemExist);
             }
 
             return new SuccessResult();

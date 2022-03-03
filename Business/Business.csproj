@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="BusinessAspects\Autofac\" />
+    <Folder Include="ValidationRules\FluentValidation\NewFolder\" />
   </ItemGroup>
 
 </Project>

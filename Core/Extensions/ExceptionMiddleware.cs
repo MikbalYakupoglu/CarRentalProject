@@ -51,11 +51,11 @@ public class ExceptionMiddleware
         if (e.Message == Messages.AuthorizationDenied)
         {
 
-            httpContext.Response.StatusCode = 403;
+            httpContext.Response.StatusCode = 401;
 
             return httpContext.Response.WriteAsync(new ErrorDetails
             {
-                StatusCode = 403,
+                StatusCode = 401,
                 Message = e.Message
             }.ToString());
         }
