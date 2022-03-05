@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
             _brandService = brandService;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet]
         public IActionResult GetAll()
         {
             var result = _brandService.GetAll();
@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         }
         
 
-        [HttpPost("Add")]
+        [HttpPost]
         public IActionResult Add(Brand brand)
         {
             var result = _brandService.Add(brand);
@@ -44,7 +44,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost("Delete")]
+        [HttpDelete]
         public IActionResult Delete(Brand brand)
         {
             var result = _brandService.Delete(brand);

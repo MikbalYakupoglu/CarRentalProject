@@ -50,7 +50,8 @@ namespace Business.Concrete
 
         }
 
-        [SecuredOperations("admin")]
+        //[SecuredOperations("admin")]
+        [ValidationAspect(typeof(CarValidations))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
@@ -110,7 +111,16 @@ namespace Business.Concrete
 
         public IDataResult<List<CarDetailsDto>> GetCarsByFilter(int brandId, int colorId)
         {
-            return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails().Where(c=> c.BrandId == brandId && c.ColorId == colorId).ToList());
+            if (brandId == 0)
+            {
+                return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails().Where(c => c.ColorId == colorId).ToList());
+            } 
+            if (colorId == 0)
+            {
+                return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails().Where(c => c.BrandId == brandId).ToList());
+            }
+
+            return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails().Where(c=> c.BrandId == brandId && c.ColorId == colorId).ToList(), Messages.ItemsListed);
         }
 
         [CacheAspect(30)]

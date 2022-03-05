@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
             _colorService = colorService;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet]
         public IActionResult GetAll()
         {
             var result = _colorService.GetAll();
@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost("Add")]
+        [HttpPost]
         public IActionResult Add(Color color)
         {
             var result = _colorService.Add(color);
@@ -44,7 +44,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost("Delete")]
+        [HttpDelete]
         public IActionResult Delete(Color color)
         {
             var result = _colorService.Delete(color);
