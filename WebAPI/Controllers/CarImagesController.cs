@@ -38,8 +38,11 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult UploadImage([FromForm] IFormFile file ,[FromForm] CarImage carImage)
         {
+            var fileType = file.FileName;
+
             var result = _carImageService.Add(file,carImage);
 
+            
             if (result.Success)
             {
                 return Ok(result);

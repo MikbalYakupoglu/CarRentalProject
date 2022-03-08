@@ -22,7 +22,6 @@ public class CarValidations : AbstractValidator<Car>
 
 
 
-
     }
 
 }
