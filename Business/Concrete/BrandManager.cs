@@ -21,13 +21,15 @@ namespace Business.Concrete
     public class BrandManager : IBrandService
     {
         private readonly IBrandDal _brandDal;
+        private readonly ICarDal _carDal;
 
-        public BrandManager(IBrandDal brandDal)
+        public BrandManager(IBrandDal brandDal, ICarDal carDal)
         {
             _brandDal = brandDal;
+            _carDal = carDal;
         }
 
-        [SecuredOperations("admin")]
+        //[SecuredOperations("admin")]
         [ValidationAspect(typeof(BrandValidation))]
         [CacheRemoveAspect("IBrandService.Get")]
         [TransactionScopeAspect]
@@ -50,10 +52,11 @@ namespace Business.Concrete
         [CacheRemoveAspect("IBrandService.Get")]
         [SecuredOperations("admin")]
         [TransactionScopeAspect]
-        public IResult Delete(Brand brand)
+        public IResult Delete(int brandId)
         {
             var result = BusinessRules.Run(
-                CheckIfBrandExistForDelete(brand.BrandName)
+                CheckIfBrandExistForDelete(brandId),
+                CheckIfBrandUsedOnAnyCar(brandId)
                 );
 
             if(!result.Success)
@@ -61,8 +64,8 @@ namespace Business.Concrete
                 return new ErrorResult(result.Message);
             }
 
-            
-            _brandDal.Delete(brand);
+            var brandToDelete = _brandDal.Get(b => b.BrandId == brandId);
+            _brandDal.Delete(brandToDelete);
             return new SuccessResult(Messages.SuccessDeleted);
         }
 
@@ -86,14 +89,25 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        private IResult CheckIfBrandExistForDelete(string brandName)
+        private IResult CheckIfBrandExistForDelete(int brandId)
         {
-            var brandsInDb = _brandDal.GetAll().Where(b => b.BrandName.ToUpper(new CultureInfo("tr-TR"))
-                                                           == brandName.ToUpper(new CultureInfo("tr-TR"))).ToList();
+            var brandsInDb = _brandDal.GetAll().Where(b => b.BrandId == brandId);
 
-            if (brandsInDb.Count <= 0)
+            if (!brandsInDb.Any())
             {
                 return new ErrorResult(Messages.DataNotFound);
+            }
+
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfBrandUsedOnAnyCar(int brandId)
+        {
+            var result = _carDal.GetAll(c => c.BrandId == brandId);
+
+            if (result.Any())
+            {
+                return new ErrorResult(Messages.BrandOnUse);
             }
 
             return new SuccessResult();

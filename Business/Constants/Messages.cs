@@ -27,5 +27,8 @@ namespace Business.Constants
         public static string SuccessfulLogin = "Giriş Başarılı.";
         public static string SuccessfulRegister = "Kayıt Başarılı.";
         public static string AccessTokenCreated = "Access Token Oluşturuldu.";
+        public static string ColorOnUse = "Renk Belli Bir Araç Tarafından Kullanımdayken Silinemez.";
+        public static string BrandOnUse = "Marka Belli Bir Araç Tarafından Kullanımdayken Silinemez.";
+
     }
 }

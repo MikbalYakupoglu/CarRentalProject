@@ -32,6 +32,6 @@ public class SecuredOperations : MethodInterceptions
             }
         }
 
-        throw new Exception(Core.Constants.Messages.AuthorizationDenied);
+        //throw new Exception(Core.Constants.Messages.AuthorizationDenied);
     }
 }

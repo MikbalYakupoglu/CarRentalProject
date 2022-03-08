@@ -18,15 +18,17 @@ namespace Business.Concrete
 {
     public class ColorManager : IColorService
     {
-        readonly IColorDal _colorDal;
+        private readonly IColorDal _colorDal;
+        private readonly ICarDal _carDal;
 
-        public ColorManager(IColorDal colorDal)
+        public ColorManager(IColorDal colorDal, ICarDal carDal)
         {
             _colorDal = colorDal;
+            _carDal = carDal;
         }
 
 
-        [SecuredOperations("admin")]
+        //[SecuredOperations("admin")]
         [TransactionScopeAspect]
         [CacheRemoveAspect("IColorService.Get")]
         public IResult Add(Color color)
@@ -45,10 +47,11 @@ namespace Business.Concrete
         [SecuredOperations("admin")]
         [TransactionScopeAspect]
         [CacheRemoveAspect("IColorService.Get")]
-        public IResult Delete(Color color)
+        public IResult Delete(int colorId)
         {
             var result = BusinessRules.Run(
-                CheckIfColorExist(color.ColorName)
+                CheckIfColorExist(colorId),
+                CheckIfColorUsedOnAnyCar(colorId)
             );
 
             if (!result.Success)
@@ -56,12 +59,12 @@ namespace Business.Concrete
                 return result;
             }
             
-            var colorsToDelete = _colorDal.GetAll().Where(c => c.ColorName == color.ColorName).ToList();
+            var colorsToDelete = _colorDal.GetAll().Where(c => c.ColorId == colorId).ToList();
             
             foreach (var colors in colorsToDelete)
                 _colorDal.Delete(colors);
 
-            return new SuccessDataResult<Brand>(Messages.SuccessDeleted);
+            return new SuccessResult(Messages.SuccessDeleted);
         }
 
         [SecuredOperations("admin")]
@@ -70,7 +73,7 @@ namespace Business.Concrete
         public IResult Update(Color color)
         {
             var result = BusinessRules.Run(
-                CheckIfColorExist(color.ColorName)
+                CheckIfColorExist(color.ColorId)
             );
 
             if (!result.Success)
@@ -92,9 +95,9 @@ namespace Business.Concrete
             return new DataResult<List<Color>>(_colorDal.GetAll(), true, Messages.ItemsListed);
         }
 
-        private IResult CheckIfColorExist(string colorName)
+        private IResult CheckIfColorExist(int colorId)
         {
-            var result = _colorDal.GetAll().Where(c => c.ColorName == colorName).ToList();
+            var result = _colorDal.GetAll().Where(c => c.ColorId == colorId).ToList();
             if (result.Count == 0)
             {
                 return new ErrorResult(Messages.DataNotFound);
@@ -102,5 +105,19 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
+
+        private IResult CheckIfColorUsedOnAnyCar(int colorId)
+        {
+            var result = _carDal.GetAll(c => c.ColorId == colorId);
+
+            if (result.Any())
+            {
+                return new ErrorResult(Messages.ColorOnUse);
+            }
+
+            return new SuccessResult();
+        }
+
+
     }
 }

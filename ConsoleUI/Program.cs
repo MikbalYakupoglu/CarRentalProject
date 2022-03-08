@@ -6,8 +6,6 @@ using Entities.Concrete;
 
 
 CarManager carManager = new CarManager(new EfCarDal());
-BrandManager brandManager = new BrandManager(new EfBrandDal());
-ColorManager colorManager = new ColorManager(new EfColorDal());
 RentalManager rentalManager = new RentalManager(new EfRentalDal());
 
 //CarDetails(carManager);

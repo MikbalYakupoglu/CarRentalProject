@@ -44,10 +44,10 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpDelete]
-        public IActionResult Delete(Color color)
+        [HttpDelete("{colorId}")]
+        public IActionResult Delete(int colorId)
         {
-            var result = _colorService.Delete(color);
+            var result = _colorService.Delete(colorId);
 
             if (result.Success)
             {

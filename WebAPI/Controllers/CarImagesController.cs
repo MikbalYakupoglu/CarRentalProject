@@ -38,17 +38,22 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult UploadImage([FromForm] IFormFile file ,[FromForm] CarImage carImage)
         {
-            var fileType = file.FileName;
+            var fileExtension = Path.GetExtension(file.FileName);
 
-            var result = _carImageService.Add(file,carImage);
-
-            
-            if (result.Success)
+            if (fileExtension == ".jpg" ||fileExtension == ".jpeg" || fileExtension == ".png")
             {
-                return Ok(result);
+                var result = _carImageService.Add(file, carImage);
+
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+
+                return BadRequest(result);
             }
 
-            return BadRequest(result);
+            return new UnsupportedMediaTypeResult();
+
         }
         
         
@@ -65,10 +70,10 @@ namespace WebAPI.Controllers
             return BadRequest();
         }
         
-        [HttpDelete]
-        public IActionResult DeleteImage([FromForm] CarImage carImage)
+        [HttpDelete("{carImageId}")]
+        public IActionResult DeleteImage(int carImageId)
         {
-            var result = _carImageService.Delete(carImage);
+            var result = _carImageService.Delete(carImageId);
 
             if (result.Success)
             {

@@ -68,12 +68,12 @@ public class CarImageManager : ICarImageService
         return new SuccessResult(Messages.SuccessUpdated);
     }
 
-    [SecuredOperations("admin")]
+    //[SecuredOperations("admin")]
     [TransactionScopeAspect]
     [CacheRemoveAspect("ICarImageService.Get")]
-    public IResult Delete(CarImage carImage)
+    public IResult Delete(int carImageId)
     {
-        var oldCarImage = _carImageDal.GetAll().FirstOrDefault(cI => cI.CarId == carImage.CarId);
+        var oldCarImage = _carImageDal.GetAll().FirstOrDefault(cI => cI.CarImageId == carImageId);
         if (oldCarImage == null)
         {
             return new ErrorResult(Messages.DataNotFound);

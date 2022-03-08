@@ -162,7 +162,7 @@ namespace Business.Concrete
                                                      c.DailyPrice == car.DailyPrice && 
                                                      c.Description.ToLower(new CultureInfo("tr-TR")) == car.Description.ToLower(new CultureInfo("tr-TR")));
 
-            if (result != null)
+            if (result != null && result.Count() > 0)
             {
                 return new ErrorResult(Messages.ItemExist);
             }
