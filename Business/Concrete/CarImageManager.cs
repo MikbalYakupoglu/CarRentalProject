@@ -23,8 +23,8 @@ public class CarImageManager : ICarImageService
         _carImageDal = carImageDal;
         _fileHelperService = fileHelperService;
     }
-
-    //[SecuredOperations("admin")]
+    
+    [SecuredOperations("admin")]
     [TransactionScopeAspect]
     [CacheRemoveAspect("ICarImageService.Get")]
     public IResult Add(IFormFile file, CarImage carImage)
@@ -68,7 +68,7 @@ public class CarImageManager : ICarImageService
         return new SuccessResult(Messages.SuccessUpdated);
     }
 
-    //[SecuredOperations("admin")]
+    [SecuredOperations("admin")]
     [TransactionScopeAspect]
     [CacheRemoveAspect("ICarImageService.Get")]
     public IResult Delete(int carImageId)

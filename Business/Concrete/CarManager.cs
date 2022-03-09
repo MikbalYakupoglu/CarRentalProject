@@ -29,7 +29,7 @@ namespace Business.Concrete
         }
 
 
-        //[SecuredOperations("admin")]
+        [SecuredOperations("admin")]
         [ValidationAspect(typeof(CarValidations))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("ICarService.Get")]
@@ -50,7 +50,7 @@ namespace Business.Concrete
 
         }
 
-        //[SecuredOperations("admin")]
+        [SecuredOperations("admin")]
         [ValidationAspect(typeof(CarValidations))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("ICarService.Get")]
@@ -156,13 +156,13 @@ namespace Business.Concrete
 
         private IResult CheckIfCarAlreadyExistInDb(Car car)
         {
-            var result = _carDal.GetAll().Where(c => c.ColorId == car.CarId && 
+            var result = _carDal.GetAll().Where(c => c.ColorId == car.ColorId && 
                                                      c.BrandId == car.BrandId &&
                                                      c.ModelYear == car.ModelYear &&
                                                      c.DailyPrice == car.DailyPrice && 
                                                      c.Description.ToLower(new CultureInfo("tr-TR")) == car.Description.ToLower(new CultureInfo("tr-TR")));
 
-            if (result != null && result.Count() > 0)
+            if (result.Any())
             {
                 return new ErrorResult(Messages.ItemExist);
             }

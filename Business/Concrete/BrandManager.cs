@@ -29,7 +29,7 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        //[SecuredOperations("admin")]
+        [SecuredOperations("admin")]
         [ValidationAspect(typeof(BrandValidation))]
         [CacheRemoveAspect("IBrandService.Get")]
         [TransactionScopeAspect]

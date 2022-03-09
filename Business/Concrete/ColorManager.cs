@@ -3,6 +3,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,21 +29,25 @@ namespace Business.Concrete
         }
 
 
-        //[SecuredOperations("admin")]
+        [SecuredOperations("admin")]
         [TransactionScopeAspect]
         [CacheRemoveAspect("IColorService.Get")]
         public IResult Add(Color color)
         {
-            if (_colorDal.GetAll().Any(c=> c.ColorName == color.ColorName))
+            var result = BusinessRules.Run(
+                CheckIfSameColorExistInDb(color)
+                );
+
+            if (!result.Success)
             {
-                return new ErrorResult(Messages.ItemExist);
+                return new ErrorResult(result.Message);
             }
-            else
-            {
-               _colorDal.Add(color);
-               return new SuccessResult(Messages.SuccessAdded);
-            }
+            
+            _colorDal.Add(color);
+            return new SuccessResult(Messages.SuccessAdded);
+            
         }
+
 
         [SecuredOperations("admin")]
         [TransactionScopeAspect]
@@ -50,7 +55,7 @@ namespace Business.Concrete
         public IResult Delete(int colorId)
         {
             var result = BusinessRules.Run(
-                CheckIfColorExist(colorId),
+                CheckIfColorExistForDelete(colorId),
                 CheckIfColorUsedOnAnyCar(colorId)
             );
 
@@ -73,7 +78,7 @@ namespace Business.Concrete
         public IResult Update(Color color)
         {
             var result = BusinessRules.Run(
-                CheckIfColorExist(color.ColorId)
+                CheckIfColorExistForDelete(color.ColorId)
             );
 
             if (!result.Success)
@@ -95,7 +100,7 @@ namespace Business.Concrete
             return new DataResult<List<Color>>(_colorDal.GetAll(), true, Messages.ItemsListed);
         }
 
-        private IResult CheckIfColorExist(int colorId)
+        private IResult CheckIfColorExistForDelete(int colorId)
         {
             var result = _colorDal.GetAll().Where(c => c.ColorId == colorId).ToList();
             if (result.Count == 0)
@@ -118,6 +123,16 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        private IResult CheckIfSameColorExistInDb(Color color)
+        {
+            var result = _colorDal.GetAll(c => c.ColorName.ToLower() == color.ColorName.ToLower());
+
+            if (result.Any())
+            {
+                return new ErrorResult(Messages.ItemExist);
+            }
+            return new SuccessResult();
+        }
 
     }
 }
