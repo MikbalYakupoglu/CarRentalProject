@@ -6,10 +6,11 @@ using Core.Extensions;
 using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
-using Entities.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Stripe;
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 

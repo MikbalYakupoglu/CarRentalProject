@@ -8,7 +8,7 @@ public class HashingHelper
 {
     public static void CreatePasswordHash(string password,out byte[] passwordHash, out byte[] passwordSalt)
     {
-        using(var hmc = new System.Security.Cryptography.HMACSHA512())
+        using(var hmc = new HMACSHA512())
         {
             passwordSalt = hmc.Key;
             passwordHash = hmc.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -17,7 +17,7 @@ public class HashingHelper
     
     public static bool VerifyPassowrd(string password, byte[] passwordHash, byte[] passwordSalt)
     {
-        using (var hmc = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+        using (var hmc = new HMACSHA512(passwordSalt))
         {
             var computedHash = hmc.ComputeHash(Encoding.UTF8.GetBytes(password));
 
