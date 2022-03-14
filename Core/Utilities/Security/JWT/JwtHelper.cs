@@ -32,13 +32,16 @@ public class JwtHelper : ITokenHelper
         return new AccessToken()
         {
             Token = token,
-            Expiration = _accessTokenExpiration
+            Expiration = _accessTokenExpiration,
+            //
+            Claims = operationClaims.Select(c=> c.Name).ToArray()
+            
         };
 
 
     }
 
-    public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user,
+    private JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user,
         SigningCredentials signingCredentials, List<OperationClaim> operationClaims)
     {
         var jwt = new JwtSecurityToken

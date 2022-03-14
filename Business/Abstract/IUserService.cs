@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Entities.Concrete;
-using User = Core.Entities.Concrete.User;
+using Entities.DTOs;
 
 namespace Business.Abstract
 {
@@ -14,7 +14,7 @@ namespace Business.Abstract
     {
         List<OperationClaim> GetClaims(User user);
         IResult Add(User user);
-        User GetByMail(string email);   
+        User GetByMail(string email);
 
     }
 }

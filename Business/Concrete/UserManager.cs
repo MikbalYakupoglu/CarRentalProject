@@ -11,6 +11,7 @@ using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using User = Core.Entities.Concrete.User;
 
@@ -20,7 +21,7 @@ namespace Business.Concrete
     {
         private IUserDal _userDal;
 
-        public UserManager(IUserDal userDal)
+        public UserManager(IUserDal userDal, IUserOperationClaimDal userOperationClaimDal)
         {
             _userDal = userDal;
         }
@@ -54,6 +55,5 @@ namespace Business.Concrete
             //}
             //return new SuccessDataResult<User>(result);
         }
-
     }
 }

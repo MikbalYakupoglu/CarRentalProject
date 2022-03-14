@@ -24,6 +24,7 @@
     <Folder Include="Aspects\Autofac\Performance\" />
     <Folder Include="CrossCuttingConcerns\Caching\Microsoft\" />
     <Folder Include="DependencyResolvers\" />
+    <Folder Include="Entities\DTOs\" />
     <Folder Include="Utilities\IoC\" />
     <Folder Include="Utilities\Security\Encryption\" />
     <Folder Include="Utilities\Security\JWT\" />

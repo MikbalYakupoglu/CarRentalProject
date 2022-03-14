@@ -1,7 +1,9 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace WebAPI.Controllers
 {
@@ -43,7 +45,7 @@ namespace WebAPI.Controllers
 
             if (!userToLogin.Success)
             {
-                return BadRequest(userToLogin.Message);
+                return Unauthorized(userToLogin.Message);
             }
 
             var result = _authService.CreateAccessToken(userToLogin.Data);
@@ -52,6 +54,7 @@ namespace WebAPI.Controllers
             {
                 return BadRequest(result.Message);
             }
+
 
             return Ok(result);
         }
