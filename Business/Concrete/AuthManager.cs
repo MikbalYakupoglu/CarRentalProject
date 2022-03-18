@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Extensions;
 using Core.Utilities.Business;
@@ -41,6 +43,7 @@ public class AuthManager : IAuthService
         return new SuccessDataResult<User>(userToCheck,Messages.SuccessfulLogin);
     }
 
+    [ValidationAspect(typeof(UserValidation))]
     [TransactionScopeAspect]
     public IDataResult<User> Register(UserForRegisterDto userForRegisterDto)
     {

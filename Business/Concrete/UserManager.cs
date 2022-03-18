@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
@@ -30,16 +32,11 @@ namespace Business.Concrete
         {
             return _userDal.GetClaims(user);
 
-            //return new SuccessDataResult<List<OperationClaim>>(result);
         }
 
         public IResult Add(User user)
         {
-            //BusinessRules.Run(
-            //    _authService.UserExists(user.Email)
-            //    );
-
-
+            
             _userDal.Add(user);
             return new SuccessResult(Messages.SuccessAdded);
         }
