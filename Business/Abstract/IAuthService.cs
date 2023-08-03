@@ -11,4 +11,5 @@ public interface IAuthService
     IDataResult<User> Register(UserForRegisterDto userForRegisterDto);
     IResult UserExists(string email);
     IDataResult<AccessToken> CreateAccessToken(User user);
+    List<string> GetUserClaims(string mail);
 }

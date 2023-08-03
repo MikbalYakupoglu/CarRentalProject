@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
@@ -57,6 +58,13 @@ namespace WebAPI.Controllers
 
 
             return Ok(result);
+        }
+
+        [HttpGet("get-claims/{email}")]
+        public IActionResult GetUserClaims(string email)
+        {
+            var userClaims = _authService.GetUserClaims(email);
+            return Ok(userClaims);
         }
     }
 }

@@ -96,4 +96,16 @@ public class AuthManager : IAuthService
         return new SuccessDataResult<AccessToken>(accessToken,Messages.AccessTokenCreated);
     }
 
+    public List<string> GetUserClaims(string mail)
+    {
+        var user = _userService.GetByMail(mail);
+        var claims = _userService.GetClaims(user);
+        List<string> claimNames = new List<string>();
+        foreach (var claim in claims)
+        {
+            claimNames.Add(claim.Name);
+        }
+        return claimNames;
+    }
+
 }
